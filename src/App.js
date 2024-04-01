@@ -8,12 +8,13 @@ function App() {
         <Router>
             <div className="App">
                 <Routes>
-                    {publicRoutes.map((route) => {
+                    {publicRoutes.map((route, index) => {
                         const Layout = route.layout == null ? Fragment : route.layout;
 
                         const Page = route.element;
                         return (
                             <Route
+                                key={index}
                                 path={route.path}
                                 element={
                                     <Layout>
@@ -24,12 +25,13 @@ function App() {
                         );
                     })}
 
-                    {privateRoutes.map((route) => {
+                    {privateRoutes.map((route, index) => {
                         const Layout = route.layout == null ? Fragment : route.layout;
 
                         const Page = route.element;
                         return (
                             <Route
+                                key={index}
                                 path={route.path}
                                 element={
                                     <Layout>
@@ -40,12 +42,13 @@ function App() {
                         );
                     })}
 
-                    {authenticationRoutes.map((route) => {
+                    {authenticationRoutes.map((route, index) => {
                         const Layout = route.layout == null ? Fragment : route.layout;
 
                         const Page = route.element;
                         return (
                             <Route
+                                key={index}
                                 path={route.path}
                                 element={
                                     <Layout>
