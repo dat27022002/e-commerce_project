@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { publicRoutes, privateRoutes, authenticationRoutes } from './routes';
 import { Fragment } from 'react';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 
 function App() {
     return (

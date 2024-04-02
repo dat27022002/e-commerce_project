@@ -58,7 +58,23 @@ a {
     color: var(--text-color);
     text-decoration: none;
 }
-
+.two-lines-truncate {
+    display: block;
+    white-space: wrap;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    max-height: calc(2rem * 2);
+    line-height: 1rem;
+}
+hr {
+    width: 100%;
+    height: 1px;
+    background-color: #f1eaea;
+}
 // Fonts emmbeded
 
 // Tailwind

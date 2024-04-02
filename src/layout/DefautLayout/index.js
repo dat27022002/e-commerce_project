@@ -7,9 +7,9 @@ const cx = classNames;
 
 function DefautLayout({ children }) {
     return (
-        <div className={cx('relative min-h-screen text-base text-text-color')}>
+        <div className={cx('relative min-h-screen text-base text-text-color flex flex-col')}>
             <Header />
-            <div className={cx('flex justify-center mt-header-default')}>{children}</div>
+            <div className={cx('flex justify-center mt-header-default flex-1')}>{children}</div>
             <Footer />
         </div>
     );
