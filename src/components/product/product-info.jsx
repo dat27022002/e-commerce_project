@@ -8,21 +8,29 @@ const ProductInfo = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
     return (
         <div className="flex gap-6 w-full rounded-2xl bg-white p-4 shadow-[0px_2px_6px_0px_rgba(0,0,0,0.15)]">
-            <img src={product?.image} alt="" className="w-[450px] h-[450px] object-cover rounded-lg" />
+            <img
+                src={product?.product_image?.[0]?.image}
+                alt=""
+                className="w-[450px] h-[450px] object-cover rounded-lg"
+            />
             <div className="flex flex-col gap-4 w-full">
                 <h1 className="text-2xl font-semibold">{product?.name}</h1>
                 <div className="w-full p-4 rounded-lg bg-red-100/70 flex flex-col gap-2">
                     <div className="w-full flex items-center justify-between">
                         <span className="text-slate-300 line-through text-base">
-                            {formatNumberWithCommas(product?.listedPrice)}đ
+                            {formatNumberWithCommas(product?.variants?.[0]?.price_export)}đ
                         </span>
                         <div className="flex items-center bg-red-300 rounded-lg text-xs px-2 py-1">
-                            Discount
-                            {100 - Math.round((product?.price * 100) / product?.listedPrice)}%
+                            Discount{' '}
+                            {100 -
+                                Math.round(
+                                    (product?.variants?.[0]?.price_sale * 100) / product?.variants?.[0]?.price_export,
+                                )}
+                            %
                         </div>
                     </div>
-                    <span className="text-red-600 line-through text-lg font-semibold">
-                        {formatNumberWithCommas(product?.price)}đ
+                    <span className="text-red-600 text-lg font-semibold">
+                        {formatNumberWithCommas(product?.variants?.[0]?.price_sale)}đ
                     </span>
                 </div>
                 <div className="flex flex-col gap-3">
