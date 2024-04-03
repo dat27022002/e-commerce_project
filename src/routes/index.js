@@ -2,10 +2,12 @@ import { DefautLayout } from '~/layout';
 import { AddressUser, Cart, Checkout, Home, Login, Signup, Product, Profile, TrackingOrder } from '~/pages';
 
 import config from '~/config';
+import Shop from '~/pages/Shop/Shop';
 
 const publicRoutes = [
     { path: config.routes.HOME, element: Home, layout: DefautLayout },
     { path: config.routes.PRODUCT, element: Product, layout: DefautLayout },
+    { path: config.routes.SHOP, element: Shop, layout: DefautLayout },
 ];
 
 const privateRoutes = [

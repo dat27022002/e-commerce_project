@@ -7,6 +7,7 @@ const routes = {
     PRODUCT: '/products/:productId',
     PROFILE: '/profile',
     SIGNUP: '/signup',
+    SHOP: '/shop',
     TRACKINGORDER: '/trackingOrder',
 };
 

@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatNumberWithCommas } from '~/utils/functions';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Button } from '@mui/material';
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
+import classNames from 'classnames';
 const ProductInfo = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
+    const [selectedVariant, setSelectedVariant] = useState();
+
+    useEffect(() => {
+        if (product) {
+            setSelectedVariant(product?.variants?.[0]);
+        }
+    }, [product]);
     return (
         <div className="flex gap-6 w-full rounded-2xl bg-white p-4 shadow-[0px_2px_6px_0px_rgba(0,0,0,0.15)]">
             <img
@@ -18,20 +26,43 @@ const ProductInfo = ({ product }) => {
                 <div className="w-full p-4 rounded-lg bg-red-100/70 flex flex-col gap-2">
                     <div className="w-full flex items-center justify-between">
                         <span className="text-slate-300 line-through text-base">
-                            {formatNumberWithCommas(product?.variants?.[0]?.price_export)}đ
+                            {formatNumberWithCommas(selectedVariant?.price_export)}đ
                         </span>
                         <div className="flex items-center bg-red-300 rounded-lg text-xs px-2 py-1">
                             Discount{' '}
-                            {100 -
-                                Math.round(
-                                    (product?.variants?.[0]?.price_sale * 100) / product?.variants?.[0]?.price_export,
-                                )}
-                            %
+                            {100 - Math.round((selectedVariant?.price_sale * 100) / selectedVariant?.price_export)}%
                         </div>
                     </div>
                     <span className="text-red-600 text-lg font-semibold">
-                        {formatNumberWithCommas(product?.variants?.[0]?.price_sale)}đ
+                        {formatNumberWithCommas(selectedVariant?.price_sale)}đ
                     </span>
+                </div>
+                <div className="flex flex-col gap-3">
+                    <h2 className="font-medium">Description</h2>
+                    <ul className="w-full flex flex-col gap-2">
+                        {product?.others?.map((other, idx) => (
+                            <li className="text-sm" key={'other-' + idx}>
+                                {other.name} : {other?.value}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="flex flex-col gap-3">
+                    <h2 className="font-medium">Variants</h2>
+                    <ul className="w-full flex items-center gap-2 flex-wrap">
+                        {product?.variants?.map((variant, idx) => (
+                            <li
+                                className={classNames(
+                                    'text-sm px-8 py-2 rounded-lg border border-solid border-slate-200 hover:cursor-pointer hover:bg-red-100/70 transition-all duration-200',
+                                    selectedVariant?.id == variant?.id && 'bg-red-200',
+                                )}
+                                onClick={() => setSelectedVariant(variant)}
+                                key={'variant-' + idx}
+                            >
+                                {variant?.size}
+                            </li>
+                        ))}
+                    </ul>
                 </div>
                 <div className="flex flex-col gap-3">
                     <h2 className="font-medium">Quantity</h2>

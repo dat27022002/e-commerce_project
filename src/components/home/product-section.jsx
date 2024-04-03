@@ -5,11 +5,9 @@ import productStore from '~/stores/product-store';
 
 const ProductSection = () => {
     const { products, setProducts } = productStore();
-
     useEffect(() => {
         const fetchProducts = async () => {
             const _products = await ProductService.getAllProducts();
-            console.log(_products);
             setProducts(_products);
         };
         if (products?.length == 0) fetchProducts();
