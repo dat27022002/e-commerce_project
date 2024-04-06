@@ -16,6 +16,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // import classNames from 'classnames';
 
 // const cx = classNames;
@@ -31,6 +32,7 @@ function Login() {
     } = useForm({
         resolver: yupResolver(schema),
     });
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -129,12 +131,14 @@ function Login() {
                                 )}
                             </FormControl>
 
-                            <Button variant="contained" onClick={handleSubmit(onSubmit)}>
+                            <Button variant="contained" onClick={handleSubmit(onSubmit)} sx={{ textTransform: 'none' }}>
                                 Login
                             </Button>
                         </Grid>
                         <Typography color="blue">Forgot password</Typography>
-                        <Typography color="blue">Create account</Typography>
+                        <Typography color="blue" onClick={() => navigate('/signup')}>
+                            Create account
+                        </Typography>
                     </Grid>
                 </Grid>
             </Card>
