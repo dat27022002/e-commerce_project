@@ -3,6 +3,7 @@ import { AddressUser, Cart, Checkout, Home, Login, Signup, Product, Profile, Tra
 
 import config from '~/config';
 import Shop from '~/pages/Shop/Shop';
+import RequireAuth from '~/layout/RequireAuthLayout';
 
 const publicRoutes = [
     { path: config.routes.HOME, element: Home, layout: DefautLayout },
@@ -11,11 +12,11 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
-    { path: config.routes.ADDRESSUSER, element: AddressUser, layout: DefautLayout },
-    { path: config.routes.CART, element: Cart, layout: DefautLayout },
-    { path: config.routes.CHECKOUT, element: Checkout, layout: DefautLayout },
-    { path: config.routes.PROFILE, element: Profile, layout: DefautLayout },
-    { path: config.routes.TRACKINGORDER, element: TrackingOrder, layout: DefautLayout },
+    { path: config.routes.ADDRESSUSER, element: AddressUser, layout: RequireAuth },
+    { path: config.routes.CART, element: Cart, layout: RequireAuth },
+    { path: config.routes.CHECKOUT, element: Checkout, layout: RequireAuth },
+    { path: config.routes.PROFILE, element: Profile, layout: RequireAuth },
+    { path: config.routes.TRACKINGORDER, element: TrackingOrder, layout: RequireAuth },
 ];
 
 const authenticationRoutes = [

@@ -17,9 +17,8 @@ import * as yup from 'yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import classNames from 'classnames';
+import { useAuth } from '~/hooks/useAuth';
 
-// const cx = classNames;
 const schema = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required(),
@@ -32,6 +31,7 @@ function Login() {
     } = useForm({
         resolver: yupResolver(schema),
     });
+    const auth = useAuth();
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
@@ -40,8 +40,10 @@ function Login() {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async (data) => {
+        await auth.login(data, () => {
+            navigate('/');
+        });
     };
     return (
         // <div className={cx('bg-blue-100 text-8xl font-semibold w-screen h-[600px] flex items-center justify-center')}>

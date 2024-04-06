@@ -16,15 +16,19 @@ import {
     Typography,
 } from '@mui/material';
 import { useState } from 'react';
-// import classNames from 'classnames';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { useAuth } from '~/hooks/useAuth';
 
 // const cx = classNames;
 const schema = yup.object().shape({
     name: yup.string(),
     email: yup.string().email().required(),
-    phoneNumber: yup.number(),
+    phoneNumber: yup
+        .string()
+        .trim()
+        .matches(/^[0-9]{10,11}$/, 'Phone number is not valid')
+        .required(),
     password: yup.string().required(),
     confirmPW: yup
         .string()
@@ -33,11 +37,6 @@ const schema = yup.object().shape({
     isAgree: yup.boolean().required(),
 });
 function Signup() {
-    // return (
-    //     <div className={cx('bg-blue-100 text-8xl font-semibold w-screen h-[600px] flex items-center justify-center')}>
-    //         SIGNUP
-    //     </div>
-    // );
     const {
         handleSubmit,
         control,
@@ -45,6 +44,7 @@ function Signup() {
     } = useForm({
         resolver: yupResolver(schema),
     });
+    const auth = useAuth();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPW, setShowConfirmPW] = useState(false);
 
@@ -53,8 +53,13 @@ function Signup() {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async (data) => {
+        await auth.signUp({
+            email: data.email,
+            password: data.password,
+            passwordConfirmation: data.confirmPW,
+            phone_number: data.phoneNumber,
+        });
     };
     return (
         <Grid container sx={{ justifyContent: 'center', alignItem: 'center', minHeight: '100vh', paddingY: '30px' }}>
