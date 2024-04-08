@@ -14,7 +14,10 @@ const ToolBar = () => {
         <section className="flex items-center gap-6 md:gap-10">
             <SearchOutlinedIcon className="h-[24px] hover:cursor-pointer hover:scale-[1.1]" />
             <FavoriteBorderOutlinedIcon className="h-[24px] hover:cursor-pointer hover:scale-[1.1]" />
-            <ShoppingCartOutlinedIcon className="h-[24px] hover:cursor-pointer hover:scale-[1.1]" />
+            <ShoppingCartOutlinedIcon
+                className="h-[24px] hover:cursor-pointer hover:scale-[1.1]"
+                onClick={() => navigate(routes.CART)}
+            />
             {user ? (
                 <Button
                     variant="text"

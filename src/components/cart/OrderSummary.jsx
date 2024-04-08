@@ -1,4 +1,5 @@
 import { Box, Typography, Button, Divider, Paper } from '@mui/material';
+import { formatNumberWithCommas } from '~/utils/functions';
 
 const OrderSummary = ({ cart }) => {
     return (
@@ -11,7 +12,7 @@ const OrderSummary = ({ cart }) => {
                             Total Price
                         </Typography>
                         <Typography variant="" className="font-bold">
-                            100
+                            {formatNumberWithCommas(cart.reduce((total, item) => total + item.price_sale, 0))} VND
                         </Typography>
                     </Box>
                     <Divider />
@@ -22,10 +23,10 @@ const OrderSummary = ({ cart }) => {
                         </Box>
                     </Box>
                     <Divider />
-                    <Box className="flex justify-between">
+                    {/* <Box className="flex justify-between">
                         <Typography variant="body1">Total Amount</Typography>
                         <Typography variant="body1">100</Typography>
-                    </Box>
+                    </Box> */}
                 </Box>
                 <Button variant="contained" color="primary" className="w-full mt-4">
                     Proceed to Checkout

@@ -1,30 +1,36 @@
-import { Box, Button, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Box, Typography } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import CartItem from './components/CartItem';
-import OrderSummary from './components/OrderSummary';
-
-const items = [
-    {
-        id: 1,
-        name: 'Product 1',
-        avg_rating: 4.5,
-        product_image: [
-            {
-                image: 'https://dynamic.zacdn.com/iaA2n1fRWsifZUh17ximY6vp2xY=/filters:quality(70):format(webp)/https://static-sg.zacdn.com/p/guess-0514-5111253-1.jpg',
-            },
-        ],
-        variants: {
-            price_export: 100,
-            price_sale: 90,
-            remain_quantity: 10,
-            size: ['S', 'M', 'L', 'XL'],
-            color: ['Red', 'Blue', 'Green'],
-        },
-    },
-];
+import CartItems from '../../components/cart/CartItems';
+import OrderSummary from '../../components/cart/OrderSummary';
+import CartService from '~/services/cartServices';
 
 function Cart() {
+    const [cart, setCart] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleRemoveItem = (variant_id) => {
+        setCart((prevCart) => prevCart.filter((item) => item.id !== variant_id));
+    };
+
+    useEffect(() => {
+        const fetchCart = async () => {
+            try {
+                setIsLoading(true);
+                const response = await CartService.getFromCart();
+                if (!response.data) {
+                }
+                setCart(response.data);
+                console.log(response.data);
+            } catch (error) {
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchCart();
+    }, []);
+
     return (
         <Box className="flex gap-x-6 w-4/5 p-10">
             <Box className="min-w-0 basis-8/12 space-y-6">
@@ -42,11 +48,7 @@ function Cart() {
                             <ShoppingBagIcon />
                             <Typography variant="h6">Product List</Typography>
                         </Box>
-                        <Box className="flex flex-col gap-4">
-                            {items.map((item) => (
-                                <CartItem key={item.id} item={item} />
-                            ))}
-                        </Box>
+                        <CartItems cart={cart} onRemoveItem={handleRemoveItem} />
                     </Box>
                 </Box>
             </Box>
@@ -58,7 +60,7 @@ function Cart() {
                         <Typography variant="body2">No cashback earned</Typography>
                     </Box>
                 </Box>
-                <OrderSummary cart={items} />
+                <OrderSummary cart={cart} />
             </Box>
         </Box>
     );
