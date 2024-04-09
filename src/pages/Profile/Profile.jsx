@@ -1,9 +1,17 @@
-import { Card, Grid, Typography, Divider, MenuList, MenuItem } from '@mui/material';
+import { Grid, Typography, Divider, MenuList, MenuItem } from '@mui/material';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 import ProfileComponent from '~/components/profile/ProfileComponent';
+import { useEffect } from 'react';
+import httpRequest from 'src/utils/httpRequest';
 
 function Profile() {
+    useEffect(() => {
+        (async () => {
+            const res = await httpRequest.get('user/infor');
+            console.log(res);
+        })();
+    }, []);
     return (
         <Grid container sx={{ height: '100vh', justifyContent: 'center', marginY: '30px' }}>
             <Grid item xs={2}></Grid>
