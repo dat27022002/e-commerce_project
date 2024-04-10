@@ -1,14 +1,16 @@
-import classNames from 'classnames';
+import classNames from 'classnames/bind';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 
+import styles from './Header.module.scss';
 import Search from './Search';
+import Action from './Action';
 
 import config from '~/config';
 
-const cx = classNames;
+const cx = classNames.bind(styles);
 
 const navigation = [
     { title: 'WOMEN', link: '' },
@@ -22,10 +24,12 @@ const navigation = [
 
 function Header() {
     const [showMenu, setShowMenu] = useState(false);
-    const [showBoxSearch, setShowBoxSearch] = useState(false);
+    const [showBoxSearch, setShowBoxSearch] = useState(true);
+    const [indexNavigation, setIndexNavigation] = useState(-1);
 
     const location = useLocation();
 
+    // eslint-disable-next-line no-unused-vars
     const currentPath = location.pathname;
 
     const handleClickBtnMenu = () => {
@@ -44,6 +48,10 @@ function Header() {
         setShowBoxSearch(false);
     };
 
+    const handleNavigation = (index) => {
+        setIndexNavigation(index);
+    };
+
     return (
         <div
             className={cx(
@@ -55,6 +63,8 @@ function Header() {
                 <button className={cx('invisible', 'max-lg:visible max-lg:pr-4')} onClick={handleClickBtnMenu}>
                     <FontAwesomeIcon icon={faBars} />
                 </button>
+
+                {/* logo */}
                 <Link
                     to={config.routes.HOME}
                     className={cx('flex items-center justify-center h-full text-2xl font-mono tracking-[0.3rem] mr-5')}
@@ -81,9 +91,13 @@ function Header() {
                                 className={cx(
                                     'flex h-full cursor-pointer items-center px-2 py-0 text-[0.90625rem] font-semibold',
                                     'max-lg:w-full max-lg:!py-3 max-lg:!text-[0.9375rem]',
-                                    'navigation-item',
-                                    currentPath.includes(value.link) && 'navigation-item-curent',
+                                    indexNavigation === index &&
+                                        'border-b-[2px] border-b-solid border-b-text-color-link !text-text-color-link mb-[-2px]',
+
+                                    'hover:border-b-[2px] hover:border-b-solid hover:mb-[-2px]',
+                                    'hover:border-b-text-color-link hover:text-text-color-link',
                                 )}
+                                onClick={() => handleNavigation(index)}
                             >
                                 <Link to={value.link} onClick={handleClickBtnMenu}>
                                     {value.title}
@@ -95,24 +109,15 @@ function Header() {
 
                 <Search showBoxSearch={showBoxSearch} />
 
-                {!showBoxSearch && (
-                    <button
-                        className={cx('mr-2 w-8 h-8 rounded-full hidden bg-background-button')}
-                        onClick={openSearch}
-                    >
-                        <FontAwesomeIcon icon={faMagnifyingGlass} />
-                    </button>
-                )}
-                {showBoxSearch && (
-                    <button
-                        className={cx('mr-2 w-8 h-8 rounded-full hidden bg-background-button')}
-                        onClick={closeSearch}
-                    >
-                        <FontAwesomeIcon icon={faXmark} />
-                    </button>
-                )}
+                <button className={cx('mr-2 w-8 h-8 rounded-full hidden bg-background-button', 'max-md:!block')}>
+                    {showBoxSearch ? (
+                        <FontAwesomeIcon icon={faXmark} onClick={closeSearch} />
+                    ) : (
+                        <FontAwesomeIcon icon={faMagnifyingGlass} onClick={openSearch} />
+                    )}
+                </button>
 
-                {/* <Action userMenu={userMenu} /> */}
+                <Action />
             </div>
         </div>
     );

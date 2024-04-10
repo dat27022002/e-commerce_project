@@ -79,6 +79,6 @@
 
 @media (max-width: 768px) {
     .search {
-        top: calc(var(--default-layout-header-height) + 3px);
+        top: calc(var(--height-header) + 1px);
     }
 }
