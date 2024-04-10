@@ -5,7 +5,12 @@
 @tailwind components;
 @tailwind utilities;
 
+//responsive
+$width-ipad: 1280px;
+$width-mobile: 768px;
+
 :root {
+
     --primary: #82aae3;
     --font-family: 'Poppins', sans-serif;
 
