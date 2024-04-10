@@ -4,9 +4,10 @@ const routes = {
     CART: '/cart',
     CHECKOUT: '/checkout',
     LOGIN: '/login',
-    PRODUCT: '/product',
+    PRODUCT: '/products/:productId',
     PROFILE: '/profile',
     SIGNUP: '/signup',
+    SHOP: '/shop',
     TRACKINGORDER: '/trackingOrder',
 };
 
