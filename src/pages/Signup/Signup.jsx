@@ -104,7 +104,7 @@ function Signup() {
                                     )}
                                 />
                                 {errors.name && (
-                                    <FormHelperText sx={{ color: 'red' }}>{errors.email.message}</FormHelperText>
+                                    <FormHelperText sx={{ color: 'red' }}>{errors.name.message}</FormHelperText>
                                 )}
                             </FormControl>
 

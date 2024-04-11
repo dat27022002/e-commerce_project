@@ -14,7 +14,7 @@ export default function AuthProvider({ children }) {
     useEffect(() => {
         const user = window.localStorage.getItem('user');
         if (user) {
-            setUser(JSON.parse(user));
+            setUser(user);
         }
     }, []);
 
@@ -23,8 +23,8 @@ export default function AuthProvider({ children }) {
             .post(api.LOGIN, data)
             .then((res) => {
                 // const token = jwtDecode(res.data.data.token);
-                window.localStorage.setItem('token', JSON.stringify(res.data.data.token));
-                window.localStorage.setItem('user', JSON.stringify(data));
+                window.localStorage.setItem('token', res.data.data.token);
+                window.localStorage.setItem('user', data);
                 setUser(data);
                 if (callback) callback();
             })
