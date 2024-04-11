@@ -1,0 +1,6 @@
+// Menu items
+.menu-item {
+    &:hover {
+        background-color: var(--background-color-secondnary);
+    }
+}

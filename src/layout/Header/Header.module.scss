@@ -1,0 +1,29 @@
+@import '/src/components/GlobalStyles/GlobalStyles';
+
+//action
+@media (max-width: $width-ipad) {
+    .logo-link {
+        img {
+            height: calc(var(--height-header) - 20px);
+        }
+    }
+    .navigation {
+        top: calc(var(--height-header) + 1px);
+        background-color: var(--background-color);
+    }
+
+    .navigation-active {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .navigation-item {
+        border-bottom: 1px solid var(--text-color-link-hightlight);
+    }
+}
+
+@media (max-width: $width-mobile) {
+    .open-search,
+    .close-search {
+        display: block !important;
+    }
+}
