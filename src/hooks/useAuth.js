@@ -3,7 +3,6 @@ import { createContext } from 'react';
 import api from 'src/config/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import { jwtDecode } from 'jwt-decode';
 
 import axios from 'axios';
 

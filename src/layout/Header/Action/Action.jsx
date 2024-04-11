@@ -6,79 +6,48 @@ import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './Action.module.scss';
 import Button from '~/components/Button';
-import Menu from '../Menu';
+
 import Image from '~/components/Image';
-import Loading from '~/components/Loading';
-//import { logout } from '~/services/authServices';
+import LoadingModal from '~/components/commons/loading-modal/loading-modal';
+import Menu from '../Menu';
 import NoimageAvatar from '~/assets/img/noImageAvatar.png';
-// eslint-disable-next-line no-unused-vars
-import notify from '~/utils/notify';
 import config from '~/config';
-import { userMenu } from '../Constant';
+import { userMenu, noUserMenu } from '../Constant';
+import { useAuth } from '~/hooks/useAuth';
+
 const cx = classNames.bind(styles);
 
 function Action() {
-    const [currentUser, setCurrentUser] = useState(false);
-    const [inforUser, setInforUser] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // eslint-disable-next-line no-unused-vars
     const navigate = useNavigate();
+
+    const token = localStorage.getItem('token');
+    const auth = useAuth();
+    const currentUser = auth.user;
 
     // Handle logic
 
-    // const handleLogout = () => {
-    //     const token = cookies.token;
-    //     setLoading(true);
-    //     logout(token)
-    //         .then(() => {
-    //             setLoading(false);
-    //             localStorage.clear();
-    //             removeCookie('token');
-    //             navigate(config.routes.auth.LOGIN);
-    //         })
-    //         .catch((error) => {
-    //             setLoading(false);
-    //             if (!error.response) {
-    //                 notify.error(config.errorMesseage.getMesseageNotify().ERROR_NETWORD);
-    //                 return;
-    //             }
+    const handleLogout = async () => {
+        setLoading(true);
+        await auth.logout();
+        navigate(config.routes.LOGIN);
+        setLoading(false);
+    };
 
-    //             notify.error(error.response.data.message);
-    //         });
-    // };
-
-    const handleMenuChange = (menuItem) => {
-        switch (menuItem.type) {
-            default:
-        }
-
-        //item in the outermost layer
+    const handleMenuChange = async (menuItem) => {
         switch (menuItem.title) {
-            case 'log out':
-                //handleLogout();
+            case 'Log out':
+                handleLogout();
                 break;
             default:
         }
     };
 
-    // useEffect(() => {
-    //     const token = cookies.token;
-    //     if (token) {
-    //         setCurrentUser(true);
-    //         setInforUser({
-    //             name: localStorage.getItem('name'),
-    //             username: localStorage.getItem('name'),
-    //             email: localStorage.getItem('email'),
-    //             avatar: localStorage.getItem('avatar'),
-    //         });
-    //     }
-    // }, [cookies.token]);
-
     return (
         <Fragment>
             <div className={cx('flex items-center justify-end ml-6')}>
-                {currentUser ? (
+                {token ? (
                     <></>
                 ) : (
                     <Fragment>
@@ -90,12 +59,11 @@ function Action() {
                         </Button>
                     </Fragment>
                 )}
-                <Menu items={userMenu} onChange={handleMenuChange}>
-                    {currentUser ? (
+                <Menu items={token ? userMenu : noUserMenu} onChange={handleMenuChange}>
+                    {token ? (
                         <Image
                             className={cx('ml-[14px] h-8 w-8 cursor-pointer rounded-full object-cover')}
-                            src={inforUser.avatar}
-                            alt={inforUser.name}
+                            src={currentUser?.avatar || ''}
                             fallback={NoimageAvatar}
                         />
                     ) : (
@@ -105,7 +73,7 @@ function Action() {
                     )}
                 </Menu>
             </div>
-            {loading && <Loading />}
+            {loading && <LoadingModal />}
         </Fragment>
     );
 }

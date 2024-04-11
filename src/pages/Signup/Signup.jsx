@@ -1,5 +1,11 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+
+import { useAuth } from '~/hooks/useAuth';
 import {
     Button,
     Card,
@@ -15,10 +21,8 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { useAuth } from '~/hooks/useAuth';
+
+import config from '~/config';
 
 // const cx = classNames;
 const schema = yup.object().shape({
@@ -36,7 +40,10 @@ const schema = yup.object().shape({
         .oneOf([yup.ref('password'), null], 'Passwords must match'),
     isAgree: yup.boolean().required(),
 });
+
 function Signup() {
+    const navigate = useNavigate();
+
     const {
         handleSubmit,
         control,
@@ -60,6 +67,7 @@ function Signup() {
             passwordConfirmation: data.confirmPW,
             phone_number: data.phoneNumber,
         });
+        navigate(config.routes.LOGIN);
     };
     return (
         <Grid container sx={{ justifyContent: 'center', alignItem: 'center', minHeight: '100vh', paddingY: '30px' }}>
