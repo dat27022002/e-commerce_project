@@ -2,15 +2,12 @@ import classNames from 'classnames/bind';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-
-import Logo from '~/components/commons/logo/logo';
-import Navbar from '~/components/layout/header/nav-bar';
-import ToolBar from '~/components/layout/header/tool-bar';
 import styles from './Header.module.scss';
 import Search from './Search';
 import Action from './Action';
+
 import config from '~/config';
 
 const cx = classNames.bind(styles);
@@ -96,7 +93,6 @@ function Header() {
                                     'max-lg:w-full max-lg:!py-3 max-lg:!text-[0.9375rem]',
                                     indexNavigation === index &&
                                         'border-b-[2px] border-b-solid border-b-text-color-link !text-text-color-link mb-[-2px]',
-
                                     'hover:border-b-[2px] hover:border-b-solid hover:mb-[-2px]',
                                     'hover:border-b-text-color-link hover:text-text-color-link',
                                 )}
