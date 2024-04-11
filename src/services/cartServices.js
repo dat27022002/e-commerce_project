@@ -1,11 +1,10 @@
 import httpRequest from '~/utils/httpRequest';
+import config from '~/config';
 
 export default class CartService {
     static getFromCart = async () => {
-        const token = JSON.parse(window.localStorage.getItem('token'));
-        if (!token) throw new Error('No token found');
         try {
-            const res = await httpRequest.get('user/cart', { headers: { Authorization: `Bearer ${token}` } });
+            const res = await httpRequest.get(config.api.CART);
             return res.data;
         } catch (error) {
             throw error;
@@ -13,14 +12,8 @@ export default class CartService {
     };
 
     static addToCart = async ({ variant_id, quantity }) => {
-        const token = JSON.parse(window.localStorage.getItem('token'));
-        if (!token) throw new Error('No token found');
         try {
-            const res = await httpRequest.post(
-                'user/cart',
-                { variant_id, quantity },
-                { headers: { Authorization: `Bearer ${token}` } },
-            );
+            const res = await httpRequest.post(config.api.CART, { variant_id, quantity });
             return res.data;
         } catch (error) {
             throw error;
@@ -28,12 +21,8 @@ export default class CartService {
     };
 
     static removeFromCart = async ({ variant_id }) => {
-        const token = JSON.parse(window.localStorage.getItem('token'));
-        if (!token) throw new Error('No token found');
         try {
-            const res = await httpRequest.delete(`/user/cart/?variant_id=${variant_id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const res = await httpRequest.delete(`${config.api.CART}?variant_id=${variant_id}`);
             return res.data;
         } catch (error) {
             throw error;

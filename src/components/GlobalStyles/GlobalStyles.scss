@@ -5,12 +5,16 @@
 @tailwind components;
 @tailwind utilities;
 
+//responsive
+$width-ipad: 1280px;
+$width-mobile: 768px;
+
 :root {
-    --primary: #82aae3;
-    --font-family: 'Poppins', sans-serif;
+    --primary: #b4282b;
+    --font-family: Arial, Helvetica, sans-serif;
 
     //defaut layout
-    --height-header: 80px;
+    --height-header: 60px;
 
     --text-color: rgb(22, 24, 35);
     --text-color-secondnary: #ffffff;
@@ -24,7 +28,6 @@
 * {
     margin: 0;
     padding: 0;
-    border: 0;
 }
 
 body {
@@ -58,10 +61,6 @@ input,
     border: none;
 }
 
-a {
-    color: var(--text-color);
-    text-decoration: none;
-}
 .two-lines-truncate {
     display: block;
     white-space: wrap;
