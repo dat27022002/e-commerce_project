@@ -14,7 +14,7 @@ export default function AuthProvider({ children }) {
     useEffect(() => {
         const user = window.localStorage.getItem('user');
         if (user) {
-            setUser(JSON.parse(user));
+            setUser(user);
         }
     }, []);
 
