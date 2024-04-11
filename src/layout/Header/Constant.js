@@ -4,7 +4,7 @@ export const userMenu = [
     {
         icon: faUser,
         title: 'View profile',
-        to: '',
+        to: '/profile',
     },
     {
         icon: faCircleQuestion,
