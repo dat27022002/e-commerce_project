@@ -1,3 +1,10 @@
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Fragment, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import {
     Button,
     Card,
@@ -11,19 +18,17 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import LoadingModal from '~/components/commons/loading-modal/loading-modal';
 import { useAuth } from '~/hooks/useAuth';
+import config from '~/config';
 
 const schema = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required(),
 });
 function Login() {
+    const [loading, setLoading] = useState(false);
+
     const {
         handleSubmit,
         control,
@@ -41,107 +46,119 @@ function Login() {
         event.preventDefault();
     };
     const onSubmit = async (data) => {
+        setLoading(true);
         await auth.login(data, () => {
-            navigate('/');
+            navigate(config.routes.HOME);
+            setLoading(false);
         });
     };
     return (
-        <Grid container sx={{ justifyContent: 'center', alignItem: 'center', minHeight: '100vh', paddingY: '30px' }}>
-            <Card
-                sx={{
-                    maxWidth: '926px',
-                }}
+        <Fragment>
+            <Grid
+                container
+                sx={{ justifyContent: 'center', alignItem: 'center', minHeight: '100vh', paddingY: '30px' }}
             >
-                <Grid container sx={{ height: '100%' }}>
-                    <Grid item xs={12} sm={6}>
-                        <img
-                            src="images/Login.jpg"
-                            alt=""
-                            style={{
-                                height: '100%',
-                            }}
-                        />
-                    </Grid>
-                    <Grid
-                        item
-                        container
-                        flexDirection="column"
-                        xs={12}
-                        sm={6}
-                        justifyContent={'space-around'}
-                        sx={{
-                            padding: 6,
-                        }}
-                    >
-                        <Typography variant="h5" fontWeight={700}>
-                            Login
-                        </Typography>
-                        <Grid container flexDirection={'column'} gap="16px">
-                            <FormControl>
-                                <FormLabel sx={{ fontSize: '14px', fontWeight: 700 }}>Email</FormLabel>
-                                <Controller
-                                    control={control}
-                                    name="email"
-                                    render={({ field: { value, onChange } }) => (
-                                        <TextField value={value} onChange={onChange} />
-                                    )}
-                                />
-                                {errors.email && (
-                                    <FormHelperText sx={{ color: 'red' }}>{errors.email.message}</FormHelperText>
-                                )}
-                            </FormControl>
-
-                            <FormControl>
-                                <FormLabel
-                                    sx={{
-                                        fontSize: '14px',
-                                        fontWeight: 700,
-                                        '&.Mui-focused': {
-                                            color: '#0009',
-                                        },
-                                    }}
-                                >
-                                    Password
-                                </FormLabel>
-                                <Controller
-                                    control={control}
-                                    name="password"
-                                    render={({ field: { value, onChange } }) => (
-                                        <OutlinedInput
-                                            value={value}
-                                            onChange={onChange}
-                                            type={showPassword ? 'text' : 'password'}
-                                            endAdornment={
-                                                <InputAdornment position="end">
-                                                    <IconButton
-                                                        onClick={handleClickShowPassword}
-                                                        onMouseDown={handleMouseDownPassword}
-                                                        edge="end"
-                                                    >
-                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            }
-                                        />
-                                    )}
-                                />
-                                {errors.password && (
-                                    <FormHelperText sx={{ color: 'red' }}>{errors.password.message}</FormHelperText>
-                                )}
-                            </FormControl>
-
-                            <Button variant="contained" onClick={handleSubmit(onSubmit)} sx={{ textTransform: 'none' }}>
-                                Login
-                            </Button>
+                <Card
+                    sx={{
+                        maxWidth: '926px',
+                    }}
+                >
+                    <Grid container sx={{ height: '100%' }}>
+                        <Grid item xs={12} sm={6}>
+                            <img
+                                src="images/Login.jpg"
+                                alt=""
+                                style={{
+                                    height: '100%',
+                                }}
+                            />
                         </Grid>
-                        <Typography color="blue">Forgot password</Typography>
-                        <Typography color="blue" onClick={() => navigate('/signup')}>
-                            Create account
-                        </Typography>
+                        <Grid
+                            item
+                            container
+                            flexDirection="column"
+                            xs={12}
+                            sm={6}
+                            justifyContent={'space-around'}
+                            sx={{
+                                padding: 6,
+                            }}
+                        >
+                            <Typography variant="h5" fontWeight={700}>
+                                Login
+                            </Typography>
+                            <Grid container flexDirection={'column'} gap="16px">
+                                <FormControl>
+                                    <FormLabel sx={{ fontSize: '14px', fontWeight: 700 }}>Email</FormLabel>
+                                    <Controller
+                                        control={control}
+                                        name="email"
+                                        render={({ field: { value, onChange } }) => (
+                                            <TextField value={value} onChange={onChange} />
+                                        )}
+                                    />
+                                    {errors.email && (
+                                        <FormHelperText sx={{ color: 'red' }}>{errors.email.message}</FormHelperText>
+                                    )}
+                                </FormControl>
+
+                                <FormControl>
+                                    <FormLabel
+                                        sx={{
+                                            fontSize: '14px',
+                                            fontWeight: 700,
+                                            '&.Mui-focused': {
+                                                color: '#0009',
+                                            },
+                                        }}
+                                    >
+                                        Password
+                                    </FormLabel>
+                                    <Controller
+                                        control={control}
+                                        name="password"
+                                        render={({ field: { value, onChange } }) => (
+                                            <OutlinedInput
+                                                value={value}
+                                                onChange={onChange}
+                                                type={showPassword ? 'text' : 'password'}
+                                                endAdornment={
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            onClick={handleClickShowPassword}
+                                                            onMouseDown={handleMouseDownPassword}
+                                                            edge="end"
+                                                        >
+                                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                }
+                                            />
+                                        )}
+                                    />
+                                    {errors.password && (
+                                        <FormHelperText sx={{ color: 'red' }}>{errors.password.message}</FormHelperText>
+                                    )}
+                                </FormControl>
+
+                                <Button
+                                    variant="contained"
+                                    onClick={handleSubmit(onSubmit)}
+                                    sx={{ textTransform: 'none' }}
+                                >
+                                    Login
+                                </Button>
+                            </Grid>
+                            <Typography color="blue">Forgot password</Typography>
+                            <Typography color="blue" onClick={() => navigate('/signup')}>
+                                Create account
+                            </Typography>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Card>
-        </Grid>
+                </Card>
+            </Grid>
+            {loading && <LoadingModal />}
+        </Fragment>
     );
 }
 
