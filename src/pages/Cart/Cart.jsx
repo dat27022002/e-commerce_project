@@ -127,14 +127,7 @@ function Cart() {
                 </Box>
             </Box>
             <Box className="basis-4/12 space-y-6">
-                <Typography variant="h6">Cashback & Voucher</Typography>
-                <Box className=" w-full rounded-[10px] p-4 shadow-lg flex gap-2">
-                    <Box className="space-y-2">
-                        <Typography variant="h6">No voucher apply</Typography>
-                        <Typography variant="body2">No cashback earned</Typography>
-                    </Box>
-                </Box>
-                <OrderSummary cart={cart} recipient={currRecipient} />
+                <OrderSummary cart={cart} setCart={setCart} recipient={currRecipient} />
             </Box>
         </Box>
     );
