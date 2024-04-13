@@ -13,17 +13,25 @@ import {
     Radio,
     Button,
     CardActions,
-    FormControl
+    FormControl,
 } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Controller, useForm } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef} from 'react';
 import httpRequest from 'src/utils/httpRequest';
 import {toast} from 'react-toastify';
 
+const defaultValues = {
+    name: '',
+    email: '',
+    phone_number: '',
+    sex: '',
+    date_of_birth: new dayjs(),
+    image: ''
+}
 const schema = yup.object().shape({
     name: yup.string().required(),
     email: yup.string().email().required(),
@@ -35,7 +43,7 @@ const schema = yup.object().shape({
     date_of_birth: yup.string().required(),
     image: yup.string().required(),
 });
-const ProfileComponent = ({setName}) => {
+const ProfileComponent = ({setName, setLoading}) => {
     const {
         handleSubmit,
         control,
@@ -46,9 +54,12 @@ const ProfileComponent = ({setName}) => {
         watch
     } = useForm({
         resolver: yupResolver(schema),
+        defaultValues
     });
     const inputRef = useRef(null)
+
     const uploadImage = async (value) => {
+        setLoading(true)
         const file = value.target.files[0]
         if(file){
             const form = new FormData()
@@ -67,8 +78,10 @@ const ProfileComponent = ({setName}) => {
         } else {
             toast.error('Upload faild!')
         }
+        setLoading(false)
     }
     const onSubmit = async (data) => {
+        setLoading(true)
         try {
             const res = await httpRequest.patch('user/infor', data);
             if(res?.status === 200) {
@@ -79,9 +92,11 @@ const ProfileComponent = ({setName}) => {
         } catch (err){
             toast.error(err)
         }
+        setLoading(false)
     }
     useEffect(() => {
         (async () => {
+            setLoading(true)
             try {
                 const res = await httpRequest.get('user/infor');
                 if(res?.status === 200) {
@@ -93,19 +108,25 @@ const ProfileComponent = ({setName}) => {
             } catch (err) {
                 toast.error(err)
             }
+            setLoading(false)
         })()
     }, [])
     watch()
     return (
         <Card sx={{backgroundColor: '#fef2f2', paddingX: '8px', paddingBottom: '8px'}}>
             <CardHeader
-                title="Hồ Sơ Của Tôi"
+                title={"My Profile"}
                 subheader="Quản lý thông tin hồ sơ để bảo mật tài khoản"
                 avatar={
                     <Avatar sx={{ bgcolor: '#b4282b' }} aria-label="recipe">
                         {getValues('name')? getValues('name')[0] : 'N/A'}
                     </Avatar>
                 }
+                titleTypographyProps={{
+                    sx: {
+                        fontSize: 18
+                    }
+                }}
             />
             <Divider />
             <CardContent>
@@ -121,7 +142,10 @@ const ProfileComponent = ({setName}) => {
                                     control={control}
                                     name="name"
                                     render={({ field: { value, onChange } }) => (
-                                        <TextField value={value} onChange={(e) => {onChange(e); setName(e.target.value)}} size='small' fullWidth/>
+                                        <TextField value={value} onChange={(e) => {
+                                            onChange(e); 
+                                            setName(e.target.value);
+                                        }} size='small' fullWidth/>
                                     )}
                                 />
                                 {errors.name && (
@@ -250,7 +274,9 @@ const ProfileComponent = ({setName}) => {
                 </Grid>
             </CardContent>
             <CardActions sx={{justifyContent: 'center'}}>
-                <Button sx={{textTransform: 'none'}} variant='contained' onClick={handleSubmit(onSubmit)}>Save</Button>
+                <Button sx={{textTransform: 'none'}} variant='contained' onClick={handleSubmit(onSubmit)}>
+                    Save
+                </Button>
             </CardActions>
         </Card>
     );
