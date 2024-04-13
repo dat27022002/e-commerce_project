@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -7,25 +7,16 @@ import { faBars, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-
 import styles from './Header.module.scss';
 import Search from './Search';
 import Action from './Action';
-
 import config from '~/config';
+import ProductService from '~/services/productService';
 
 const cx = classNames.bind(styles);
-
-const navigation = [
-    { title: 'WOMEN', link: '' },
-    { title: 'MEN', link: '' },
-    { title: 'LUXURY', link: '' },
-    { title: 'SPORTS', link: '' },
-    { title: 'KIDS', link: '' },
-    { title: 'BEAUTY', link: '' },
-    { title: 'HOME & LIFESTYLE', link: '' },
-];
 
 function Header() {
     const [showMenu, setShowMenu] = useState(false);
     const [showBoxSearch, setShowBoxSearch] = useState(true);
     const [indexNavigation, setIndexNavigation] = useState(-1);
+    const [navigation, setNavigation] = useState([]);
 
     const location = useLocation();
 
@@ -51,6 +42,20 @@ function Header() {
     const handleNavigation = (index) => {
         setIndexNavigation(index);
     };
+
+    useEffect(() => {
+        ProductService.getAllCategories()
+            .then((result) => {
+                const navigation = result.map((item) => ({
+                    title: item.name,
+                    link: config.routes.SHOP + `/${item.id}`,
+                }));
+                setNavigation(navigation);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
 
     return (
         <div

@@ -8,6 +8,7 @@ const routes = {
     PROFILE: '/profile',
     SIGNUP: '/signup',
     SHOP: '/shop',
+    SHOPCATEGOTY: '/shop/:categoryId',
     TRACKINGORDER: '/trackingOrder',
 };
 
