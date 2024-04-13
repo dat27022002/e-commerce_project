@@ -1,7 +1,8 @@
-import httpRequest from '~/utils/httpRequest';
+import httpRequest, { get } from '~/utils/httpRequest';
 
 const productRoutes = {
     getAllProducts: '/fake-review/products',
+    getAllCategories: '/category',
 };
 
 export default class ProductService {
@@ -16,6 +17,13 @@ export default class ProductService {
         try {
             const res = await httpRequest.get(productRoutes.getAllProducts + '/' + productId);
             return res.data;
+        } catch (error) {}
+        return [];
+    };
+    static getAllCategories = async () => {
+        try {
+            const res = await get(productRoutes.getAllCategories + '/root');
+            return res;
         } catch (error) {}
         return [];
     };

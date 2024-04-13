@@ -16,12 +16,12 @@ httpRequest.interceptors.request.use(
 
 export const get = async (path, options = {}) => {
     const response = await httpRequest.get(path, options);
-    return response.data;
+    return response.data.data;
 };
 
 export const post = async (path, data = {}) => {
     const response = await httpRequest.post(path, data);
-    return response.data;
+    return response.data.data;
 };
 
 export default httpRequest;
