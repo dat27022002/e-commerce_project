@@ -11,7 +11,7 @@ import RecipientInfoModal from '~/components/cart/RecipientInfoModal';
 
 function Cart() {
     const [cart, setCart] = useState([]);
-    const [recipient, setRecipient] = useState([]);
+    const [recipients, setRecipients] = useState([]);
     const [currRecipient, setCurrRecipient] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [openModal, setOpenModal] = useState(false);
@@ -40,34 +40,35 @@ function Cart() {
         setIsChange(true);
     };
 
+    const fetchCart = async () => {
+        try {
+            const response = await CartService.getFromCart();
+            if (response.code !== 200) {
+                notify.error('An error occurred, please try again later');
+                return;
+            }
+            setCart(response.data);
+        } catch (error) {
+            notify.error('An error occurred, please try again later');
+        }
+    };
+    const fetchRecipients = async () => {
+        try {
+            const response = await UserService.getRecipientUser();
+            if (response.code !== 200) {
+                notify.warn('An error occurred, please try again later');
+                return;
+            }
+            setRecipients(response.data);
+            setCurrRecipient(response.data.find((item) => item.default_recipient));
+        } catch (error) {
+            notify.error('An error occurred, please try again later');
+        }
+    };
+
     useEffect(() => {
         setIsLoading(true);
-        const fetchCart = async () => {
-            try {
-                const response = await CartService.getFromCart();
-                if (response.code !== 200) {
-                    notify.error('An error occurred, please try again later');
-                    return;
-                }
-                setCart(response.data);
-            } catch (error) {
-                notify.error('An error occurred, please try again later');
-            }
-        };
-        const fetchRecipient = async () => {
-            try {
-                const response = await UserService.getRecipientUser();
-                if (response.code !== 200) {
-                    notify.warn('An error occurred, please try again later');
-                    return;
-                }
-                setRecipient(response.data);
-                setCurrRecipient(response.data.find((item) => item.default_recipient));
-            } catch (error) {
-                notify.error('An error occurred, please try again later');
-            }
-        };
-        Promise.all([fetchCart(), fetchRecipient()]).finally(() => {
+        Promise.all([fetchCart(), fetchRecipients()]).finally(() => {
             setIsLoading(false);
         });
     }, []);
@@ -81,6 +82,7 @@ function Cart() {
                 }}
                 recipient={currRecipient}
                 isChange={isChange}
+                onUpdate={fetchRecipients}
             />
             <Box className="min-w-0 basis-8/12 space-y-6">
                 <Typography variant="h4">My Cart</Typography>
@@ -96,20 +98,22 @@ function Cart() {
                                     value={currRecipient?.id || ''}
                                     label="Address"
                                     onChange={(event) => {
-                                        const selectedRecipient = recipient.find(
+                                        const selectedRecipient = recipients.find(
                                             (item) => item.id === event.target.value,
                                         );
                                         setCurrRecipient(selectedRecipient);
                                     }}
                                 >
-                                    {recipient.map((item) => (
+                                    {recipients.map((item) => (
                                         <MenuItem key={item.id} value={item.id}>
                                             {item.address}
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
-                            <Button onClick={handleChangeRecipient}>Change address</Button>
+                            <Button disabled={recipients.length === 0} onClick={handleChangeRecipient}>
+                                Change address
+                            </Button>
                             <Button onClick={handleAddRecipient}>Add new address</Button>
                         </Box>
                     </Box>

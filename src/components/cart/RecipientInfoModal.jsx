@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import UserService from '~/services/userService';
 import notify from '~/utils/notify';
 
-const RecipientInfoModal = ({ open, handleClose, recipient, isChange }) => {
+const RecipientInfoModal = ({ open, handleClose, recipient, isChange, onUpdate }) => {
     const [name, setName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [address, setAddress] = useState('');
@@ -29,6 +29,7 @@ const RecipientInfoModal = ({ open, handleClose, recipient, isChange }) => {
             }
             notify.success('Success');
             handleClose();
+            onUpdate();
         } catch (error) {
             notify.error('An error occurred, please try again later');
         }
