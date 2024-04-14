@@ -5,6 +5,7 @@ const routes = {
     CHECKOUT: '/checkout',
     LOGIN: '/login',
     PRODUCT: '/products/:productId',
+    PRODUCTSEARCH: '/products/search/:keySearch',
     PROFILE: '/profile',
     SIGNUP: '/signup',
     SHOP: '/shop',
