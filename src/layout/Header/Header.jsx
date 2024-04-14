@@ -15,7 +15,6 @@ const cx = classNames.bind(styles);
 function Header() {
     const [showMenu, setShowMenu] = useState(false);
     const [showBoxSearch, setShowBoxSearch] = useState(true);
-    const [indexNavigation, setIndexNavigation] = useState(-1);
     const [navigation, setNavigation] = useState([]);
 
     const location = useLocation();
@@ -37,10 +36,6 @@ function Header() {
 
     const closeSearch = () => {
         setShowBoxSearch(false);
-    };
-
-    const handleNavigation = (index) => {
-        setIndexNavigation(index);
     };
 
     useEffect(() => {
@@ -96,12 +91,9 @@ function Header() {
                                 className={cx(
                                     'flex h-full cursor-pointer items-center px-2 py-0 text-[0.90625rem] font-semibold',
                                     'max-lg:w-full max-lg:!py-3 max-lg:!text-[0.9375rem]',
-                                    indexNavigation === index &&
-                                        'border-b-[2px] border-b-solid border-b-text-color-link !text-text-color-link mb-[-2px]',
                                     'hover:border-b-[2px] hover:border-b-solid hover:mb-[-2px]',
                                     'hover:border-b-text-color-link hover:text-text-color-link',
                                 )}
-                                onClick={() => handleNavigation(index)}
                             >
                                 <Link to={value.link} onClick={handleClickBtnMenu}>
                                     {value.title}

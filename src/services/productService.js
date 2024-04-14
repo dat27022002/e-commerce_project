@@ -3,6 +3,7 @@ import httpRequest, { get } from '~/utils/httpRequest';
 const productRoutes = {
     getAllProducts: '/fake-review/products',
     getAllCategories: '/category',
+    product: '/product',
 };
 
 export default class ProductService {
@@ -23,6 +24,13 @@ export default class ProductService {
     static getAllCategories = async () => {
         try {
             const res = await get(productRoutes.getAllCategories + '/root');
+            return res;
+        } catch (error) {}
+        return [];
+    };
+    static searchProduct = async (valueSearch) => {
+        try {
+            const res = await get(productRoutes.product, { param: { search: valueSearch } });
             return res;
         } catch (error) {}
         return [];
