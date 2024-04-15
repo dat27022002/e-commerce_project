@@ -17,6 +17,7 @@ import {
     OutlinedInput,
     TextField,
     Typography,
+    Link,
 } from '@mui/material';
 import LoadingModal from '~/components/commons/loading-modal/loading-modal';
 import { useAuth } from '~/hooks/useAuth';
@@ -144,15 +145,21 @@ function Login() {
                                 <Button
                                     variant="contained"
                                     onClick={handleSubmit(onSubmit)}
-                                    sx={{ textTransform: 'none' }}
+                                    sx={{
+                                        textTransform: 'none',
+                                        backgroundColor: 'rgba(185, 28, 28, 0.8)',
+                                        '&:hover': {
+                                            backgroundColor: 'rgb(185, 28, 28)',
+                                        },
+                                    }}
                                 >
                                     Login
                                 </Button>
                             </Grid>
-                            <Typography color="blue">Forgot password</Typography>
-                            <Typography color="blue" onClick={() => navigate('/signup')}>
+                            <Typography color="#b4282b">Forgot password</Typography>
+                            <Link color="#b4282b" href="/signup">
                                 Create account
-                            </Typography>
+                            </Link>
                         </Grid>
                     </Grid>
                 </Card>

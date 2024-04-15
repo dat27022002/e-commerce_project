@@ -232,7 +232,7 @@ function Signup() {
                                             label={
                                                 <p>
                                                     I agree to the{' '}
-                                                    <a href="/" style={{ color: 'blue' }}>
+                                                    <a href="/" style={{ color: '#b4282b' }}>
                                                         Privacy policy
                                                     </a>
                                                 </p>
@@ -244,14 +244,24 @@ function Signup() {
                                     <FormHelperText sx={{ color: 'red' }}>{errors.isAgree.message}</FormHelperText>
                                 )}
                             </FormControl>
-                            <Button variant="contained" onClick={handleSubmit(onSubmit)} sx={{ textTransform: 'none' }}>
+                            <Button
+                                variant="contained"
+                                onClick={handleSubmit(onSubmit)}
+                                sx={{
+                                    textTransform: 'none',
+                                    backgroundColor: 'rgba(185, 28, 28, 0.8)',
+                                    '&:hover': {
+                                        backgroundColor: 'rgb(185, 28, 28)',
+                                    },
+                                }}
+                            >
                                 Create Account
                             </Button>
                         </Grid>
 
                         <Typography>
                             Already have an acount?{' '}
-                            <a href="/login" style={{ color: 'blue' }}>
+                            <a href="/login" style={{ color: '#b4282b' }}>
                                 Login
                             </a>
                         </Typography>
