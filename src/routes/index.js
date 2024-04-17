@@ -1,5 +1,5 @@
 import { DefautLayout } from '~/layout';
-import { AddressUser, Cart, Checkout, Home, Login, Signup, Product, Profile, TrackingOrder } from '~/pages';
+import { AddressUser, Cart, Checkout, Home, Login, Signup, ForgotPassword, Product, Profile, TrackingOrder } from '~/pages';
 
 import config from '~/config';
 import Shop from '~/pages/Shop/Shop';
@@ -22,6 +22,7 @@ const privateRoutes = [
 const authenticationRoutes = [
     { path: config.routes.LOGIN, element: Login, layout: null },
     { path: config.routes.SIGNUP, element: Signup, layout: null },
+    { path: config.routes.FORGOT_PASSWORD, element: ForgotPassword, layout: null },
 ];
 
 export { publicRoutes, privateRoutes, authenticationRoutes };

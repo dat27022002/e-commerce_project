@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { GoogleLogin } from '@react-oauth/google';
 import {
     Button,
     Card,
@@ -155,8 +155,9 @@ function Login() {
                                 >
                                     Login
                                 </Button>
+                                <GoogleLogin onSuccess={auth.handleLoginGG} onError={(e) => console.log(e)}/>
                             </Grid>
-                            <Typography color="#b4282b">Forgot password</Typography>
+                            <Link color="#b4282b" href="/forgot_password">Forgot password</Link>
                             <Link color="#b4282b" href="/signup">
                                 Create account
                             </Link>
