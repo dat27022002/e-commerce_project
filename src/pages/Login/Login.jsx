@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from 'react-google-login';
 import {
     Button,
     Card,
@@ -36,6 +36,10 @@ function Login() {
         formState: { errors },
     } = useForm({
         resolver: yupResolver(schema),
+        defaultValues: {
+            email: "",
+            password: ""
+        }
     });
     const auth = useAuth();
     const navigate = useNavigate();
@@ -155,7 +159,11 @@ function Login() {
                                 >
                                     Login
                                 </Button>
-                                <GoogleLogin onSuccess={auth.handleLoginGG} onError={(e) => console.log(e)}/>
+                                <GoogleLogin 
+                                clientId = {process.env.REACT_APP_CLIENT_ID_GOOGLE}
+                                onSuccess={auth.handleLoginGG(() => navigate(config.routes.HOME))} 
+                                onError={(e) => console.log(e)}
+                                />
                             </Grid>
                             <Link color="#b4282b" href="/forgot_password">Forgot password</Link>
                             <Link color="#b4282b" href="/signup">

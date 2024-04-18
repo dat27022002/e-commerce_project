@@ -23,6 +23,7 @@ import dayjs from 'dayjs';
 import { useEffect, useRef } from 'react';
 import httpRequest from 'src/utils/httpRequest';
 import { toast } from 'react-toastify';
+import { useAuth } from '~/hooks/useAuth';
 
 const defaultValues = {
     name: '',
@@ -57,53 +58,58 @@ const ProfileComponent = ({ setName, setLoading }) => {
         defaultValues,
     });
     const inputRef = useRef(null);
-
+    const auth = useAuth()
     const uploadImage = async (value) => {
-        setLoading(true);
         const file = value.target.files[0];
         if (file) {
             const form = new FormData();
             form.append('image', file);
             try {
+                setLoading(true);
                 const res = await httpRequest.patch('user/image', form);
                 if (res.status === 200) {
                     setValue('image', res.data.data.image);
                     toast.success('Upload image successfully!');
+                    setLoading(false);
                 } else {
                     toast.error('Submit image faild!');
+                    setLoading(false);
                 }
             } catch (err) {
                 toast.error(err);
+                setLoading(false);
             }
         } else {
             toast.error('Upload faild!');
         }
-        setLoading(false);
     };
     const onSubmit = async (data) => {
-        setLoading(true);
         try {
+            setLoading(true);
             const res = await httpRequest.patch('user/infor', data);
             if (res?.status === 200) {
                 toast.success('Save success!');
+                auth.setUser({...auth.user, ...data})
+                setLoading(false);
             } else {
                 toast.error('Save faild!');
+                setLoading(false);
             }
         } catch (err) {
             toast.error(err);
         }
-        setLoading(false);
     };
     useEffect(() => {
         (async () => {
             setLoading(true);
             try {
                 const res = await httpRequest.get('user/infor');
+                const userData = {...res.data.data}
                 if (res?.status === 200) {
-                    for (let [key, value] of Object.entries(res.data.data)) {
+                    for (let [key, value] of Object.entries(userData)) {
                         setValue(key, value);
                     }
-                    setName(res.data.data.name);
+                    setName(userData.name);
                 }
             } catch (err) {
                 toast.error(err);
@@ -169,7 +175,7 @@ const ProfileComponent = ({ setName, setLoading }) => {
                                         control={control}
                                         name="email"
                                         render={({ field: { value, onChange } }) => (
-                                            <TextField value={value} onChange={onChange} size="small" fullWidth />
+                                            <TextField value={value} onChange={onChange} size="small" fullWidth disabled/>
                                         )}
                                     />
                                     {errors.email && (
@@ -188,7 +194,7 @@ const ProfileComponent = ({ setName, setLoading }) => {
                                         control={control}
                                         name="phone_number"
                                         render={({ field: { value, onChange } }) => (
-                                            <TextField value={value} onChange={onChange} size="small" fullWidth />
+                                            <TextField value={value} onChange={onChange} size="small" fullWidth disabled/>
                                         )}
                                     />
                                     {errors.phone_number && (

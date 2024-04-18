@@ -3,17 +3,16 @@ import { createContext } from 'react';
 import api from 'src/config/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import {Dialog, CircularProgress} from '@mui/material'
 
 const authContext = createContext(null);
-const GoogleClientId = process.env.REACT_APP_CLIENT_ID_OAUTH_GOOGLE
 
 export default function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false)
+
     useEffect(() => {
         const user = window.localStorage.getItem('user');
         if (user) {
@@ -26,10 +25,10 @@ export default function AuthProvider({ children }) {
         axios
             .post(api.LOGIN, data)
             .then((res) => {
-                const token = jwtDecode(res.data.data.token);
+                const userData = {id: jwtDecode(res.data.data.token).id};
                 window.localStorage.setItem('token', res.data.data.token);
-                window.localStorage.setItem('user', JSON.stringify(token));
-                setUser(data);
+                window.localStorage.setItem('user', JSON.stringify(userData));
+                setUser(userData);
                 if (callback) callback();
                 setLoading(false)
             })
@@ -62,24 +61,23 @@ export default function AuthProvider({ children }) {
         setUser(null);
         if (callback) callback();
     };
-    const handleLoginGG = (res) => {
-        console.log(res)
-        // const dataUser  = jwtDecode(res.credential);
-        // console.log(dataUser)
-        const ggToken = res.credential
+    const handleLoginGG = (callback = null) => (res) => {
         setLoading(true)
         axios.post(api.LOGIN_BY_GG, {
-            googleToken: ggToken
+            googleToken: res.accessToken
         })
-        .then((res) => {
-            console.log(res)
+        .then((response) => {
+            window.localStorage.setItem('token', response.data.data.token);
+            const userData = {...response.data.data.user, ...res.profileObj}
+            window.localStorage.setItem('user', JSON.stringify(userData))
+            setUser(userData)
+            if(callback) callback()
             setLoading(false)
         }).catch(err => {
             toast.error(err.message)
             setLoading(false)
         })
-        // window.localStorage.setItem('token', res.credential);
-        // window.localStorage.setItem('user', dataUser)
+        
     }
     const handle_verify_email = async (email, callback = null) => {
         try {
@@ -131,6 +129,7 @@ export default function AuthProvider({ children }) {
         <authContext.Provider
             value={{
                 user,
+                setUser,
                 login: handleLogin,
                 logout: handleLogout,
                 signUp: handleSignUp,
@@ -140,7 +139,6 @@ export default function AuthProvider({ children }) {
                 resetPassword: handleResetPwd
             }}
         >
-            <GoogleOAuthProvider clientId={GoogleClientId}>
             {children}
             <Dialog 
             fullWidth 
@@ -162,7 +160,6 @@ export default function AuthProvider({ children }) {
                 <CircularProgress sx={{color: '#ffff'}}/>
             </Dialog>
             <ToastContainer />
-            </GoogleOAuthProvider>
         </authContext.Provider>
     );
 }
