@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import HeadlessTippy from '@tippyjs/react/headless';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,7 +8,6 @@ import { faCircleXmark, faSpinner, faMagnifyingGlass } from '@fortawesome/free-s
 
 import { Wrapper as PopperWrapper } from '~/components/Popper';
 import styles from './Search.module.scss';
-import useDebounce from '~/utils/useDebounce';
 
 const cx = classNames.bind(styles);
 
@@ -16,32 +15,31 @@ function Search({ showBoxSearch }) {
     const [searchValue, setSearchValue] = useState('');
     const [searchResult, setSearchResult] = useState([]);
     const [showResult, setShowResult] = useState(false);
+    // eslint-disable-next-line no-unused-vars
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
-    const debouncedValue = useDebounce(searchValue, 500);
 
     const inputRef = useRef();
     const boxSearchRef = useRef();
 
     const styleTagSearchResult = { width: boxSearchRef.current?.clientWidth };
 
-    useEffect(() => {
-        if (!debouncedValue.trim()) {
-            setSearchResult([]);
-            return;
-        }
+    // useEffect(() => {
+    //     if (!debouncedValue.trim()) {
+    //         setSearchResult([]);
+    //         return;
+    //     }
 
-        const fetchApi = async () => {
-            setLoading(true);
+    //     const fetchApi = async () => {
+    //         setLoading(true);
 
-            //const result = await searchServices.filetWordContain(debouncedValue);
-            //setSearchResult(result);
-            setLoading(false);
-        };
+    //         //const result = await searchServices.filetWordContain(debouncedValue);
+    //         //setSearchResult(result);
+    //         setLoading(false);
+    //     };
 
-        fetchApi();
-    }, [debouncedValue]);
+    //     fetchApi();
+    // }, [debouncedValue]);
 
     const handleClear = () => {
         setSearchValue('');
@@ -60,15 +58,20 @@ function Search({ showBoxSearch }) {
         }
     };
 
+    // eslint-disable-next-line no-unused-vars
     const handleKeyDown = (event) => {
         // Check if the keycode is 13 (Enter)
         if (event.keyCode === 13) {
-            search(searchValue);
+            handleSearch();
         }
     };
 
     const search = (value) => {
         navigate(`/lookup/${value}`);
+    };
+
+    const handleSearch = () => {
+        navigate(`/products/search/${searchValue}`);
     };
 
     return (
@@ -130,7 +133,7 @@ function Search({ showBoxSearch }) {
                             'active:cursor-pointer active:bg-gray-900/[.06]',
                         )}
                         onMouseDown={(e) => e.preventDefault()}
-                        onClick={() => search(searchValue)}
+                        onClick={handleSearch}
                         disabled={searchValue === ''}
                     >
                         <FontAwesomeIcon icon={faMagnifyingGlass} />

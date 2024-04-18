@@ -9,6 +9,8 @@ const publicRoutes = [
     { path: config.routes.HOME, element: Home, layout: DefautLayout },
     { path: config.routes.PRODUCT, element: Product, layout: DefautLayout },
     { path: config.routes.SHOP, element: Shop, layout: DefautLayout },
+    { path: config.routes.SHOPCATEGOTY, element: Shop, layout: DefautLayout },
+    { path: config.routes.PRODUCTSEARCH, element: Shop, layout: DefautLayout },
 ];
 
 const privateRoutes = [

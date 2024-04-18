@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -7,25 +7,15 @@ import { faBars, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-
 import styles from './Header.module.scss';
 import Search from './Search';
 import Action from './Action';
-
 import config from '~/config';
+import ProductService from '~/services/productService';
 
 const cx = classNames.bind(styles);
-
-const navigation = [
-    { title: 'WOMEN', link: '' },
-    { title: 'MEN', link: '' },
-    { title: 'LUXURY', link: '' },
-    { title: 'SPORTS', link: '' },
-    { title: 'KIDS', link: '' },
-    { title: 'BEAUTY', link: '' },
-    { title: 'HOME & LIFESTYLE', link: '' },
-];
 
 function Header() {
     const [showMenu, setShowMenu] = useState(false);
     const [showBoxSearch, setShowBoxSearch] = useState(true);
-    const [indexNavigation, setIndexNavigation] = useState(-1);
+    const [navigation, setNavigation] = useState([]);
 
     const location = useLocation();
 
@@ -48,9 +38,19 @@ function Header() {
         setShowBoxSearch(false);
     };
 
-    const handleNavigation = (index) => {
-        setIndexNavigation(index);
-    };
+    useEffect(() => {
+        ProductService.getAllCategories()
+            .then((result) => {
+                const navigation = result.map((item) => ({
+                    title: item.name,
+                    link: config.routes.SHOP + `/${item.id}`,
+                }));
+                setNavigation(navigation);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, []);
 
     return (
         <div
@@ -91,12 +91,9 @@ function Header() {
                                 className={cx(
                                     'flex h-full cursor-pointer items-center px-2 py-0 text-[0.90625rem] font-semibold',
                                     'max-lg:w-full max-lg:!py-3 max-lg:!text-[0.9375rem]',
-                                    indexNavigation === index &&
-                                        'border-b-[2px] border-b-solid border-b-text-color-link !text-text-color-link mb-[-2px]',
                                     'hover:border-b-[2px] hover:border-b-solid hover:mb-[-2px]',
                                     'hover:border-b-text-color-link hover:text-text-color-link',
                                 )}
-                                onClick={() => handleNavigation(index)}
                             >
                                 <Link to={value.link} onClick={handleClickBtnMenu}>
                                     {value.title}
