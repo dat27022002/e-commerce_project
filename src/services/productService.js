@@ -14,6 +14,13 @@ export default class ProductService {
         } catch (error) {}
         return [];
     };
+    static getProductByCategory = async (category) => {
+        try {
+            const res = await httpRequest.get(productRoutes.product + `?category_id=${category}`);
+            return res.data;
+        } catch (error) {}
+        return [];
+    };
     static getProductById = async (productId) => {
         try {
             const res = await httpRequest.get(productRoutes.getAllProducts + '/' + productId);

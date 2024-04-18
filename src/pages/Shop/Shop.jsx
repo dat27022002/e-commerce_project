@@ -1,6 +1,7 @@
 import classNames from 'classnames';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
+import LoadingModal from '~/components/commons/loading-modal/loading-modal';
 import Slider from '~/components/home/hero-banner';
 import ProductCard from '~/components/home/product/product-card';
 import ProductService from '~/services/productService';
@@ -9,15 +10,20 @@ import productStore from '~/stores/product-store';
 const cx = classNames;
 
 function Shop() {
+    const { categoryId } = useParams();
     const [searchParams, setSearchParams] = useSearchParams();
     const { products, setProducts } = productStore();
+    const [isLoanding, setIsLoading] = useState(false);
+
     useEffect(() => {
         const fetchProducts = async () => {
-            const _products = await ProductService.getAllProducts();
-            setProducts(_products);
+            setIsLoading(true);
+            const _products = await ProductService.getProductByCategory(categoryId);
+            setProducts(_products.data);
         };
-        if (products?.length == 0) fetchProducts();
-    }, []);
+        fetchProducts();
+        setIsLoading(false);
+    }, [categoryId]);
 
     return (
         <div className="flex justify-center w-full">
@@ -50,6 +56,7 @@ function Shop() {
                             <ProductCard product={product} key={'product-' + idx} />
                         ))}
                 </div>
+                {isLoanding && <LoadingModal />}
             </section>
         </div>
     );
