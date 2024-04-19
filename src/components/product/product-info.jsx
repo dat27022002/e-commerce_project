@@ -5,15 +5,74 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { Button } from '@mui/material';
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import classNames from 'classnames';
+import CartService from '~/services/cartServices';
+import notify from '~/utils/notify';
+import CheckoutService from '~/services/checkoutService';
+import UserService from '~/services/userService';
+
 const ProductInfo = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
     const [selectedVariant, setSelectedVariant] = useState();
+    const [recipient, setRecipient] = useState();
+
+    const handleAddToCart = () => {
+        const addToCart = async () => {
+            try {
+                const response = await CartService.addToCart({ variant_id: selectedVariant.id, quantity });
+                if (response.code !== 200) {
+                    notify.error(response.message);
+                    return;
+                }
+                notify.success('Added to cart');
+            } catch (error) {
+                notify.error('An error occurred, please try again later');
+            }
+        };
+        addToCart();
+    };
+
+    const handleCreateOrder = () => {
+        console.log(selectedVariant);
+        const createOrder = async () => {
+            try {
+                const response = await CheckoutService.createOrderForProduct({
+                    variant: { quantity, ...selectedVariant },
+                    recipient,
+                });
+                if (response.code !== 200) {
+                    notify.error(response.message);
+                    return;
+                }
+                window.open(response.data.payment_link.checkoutUrl, '_blank');
+            } catch (error) {
+                notify.error('Checkout failed, please try again later');
+            }
+        };
+        createOrder();
+    };
 
     useEffect(() => {
         if (product) {
             setSelectedVariant(product?.variants?.[0]);
         }
     }, [product]);
+
+    useEffect(() => {
+        const fetchRecipients = async () => {
+            try {
+                const response = await UserService.getRecipientUser();
+                if (response.code !== 200) {
+                    notify.error(response.message);
+                    return;
+                }
+                setRecipient(response.data.find((item) => item.default_recipient));
+            } catch (error) {
+                notify.error('An error occurred, please try again later');
+            }
+        };
+        fetchRecipients();
+    }, []);
+
     return (
         <div className="flex gap-6 w-full rounded-2xl bg-white p-4 shadow-[0px_2px_6px_0px_rgba(0,0,0,0.15)]">
             <img
@@ -86,10 +145,15 @@ const ProductInfo = ({ product }) => {
                     <Button
                         variant="outline"
                         className="w-full flex items-center gap-2 !border !border-solid !border-slate-300 !rounded-lg"
+                        onClick={handleAddToCart}
                     >
                         <LocalMallOutlinedIcon /> Add to cart
                     </Button>
-                    <Button className="w-full flex items-center gap-2 !bg-slate-600 !rounded-lg" variant="contained">
+                    <Button
+                        className="w-full flex items-center gap-2 !bg-slate-600 !rounded-lg"
+                        variant="contained"
+                        onClick={handleCreateOrder}
+                    >
                         Buy now
                     </Button>
                 </div>

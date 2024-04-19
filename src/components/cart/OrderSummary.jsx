@@ -1,14 +1,14 @@
 import { Box, Typography, Button, Divider } from '@mui/material';
 import { formatNumberWithCommas } from '~/utils/functions';
-import { CheckoutService } from '~/services/checkoutService';
+import CheckoutService from '~/services/checkoutService';
 import notify from '~/utils/notify';
 
 const OrderSummary = ({ cart, setCart, recipient }) => {
     const handleCreatePaymentLink = async () => {
         try {
-            const response = await CheckoutService.createOrder({ cart, recipient });
+            const response = await CheckoutService.createOrderForCart({ cart, recipient });
             if (response.code !== 200) {
-                notify.error('Checkout failed, please try again later');
+                notify.error(response.message);
                 return;
             }
             window.open(response.data.payment_link.checkoutUrl, '_blank');
@@ -47,7 +47,13 @@ const OrderSummary = ({ cart, setCart, recipient }) => {
                         <Typography variant="body1">100</Typography>
                     </Box> */}
                 </Box>
-                <Button variant="contained" color="primary" className="w-full mt-4" onClick={handleCreatePaymentLink}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className="w-full mt-4"
+                    onClick={handleCreatePaymentLink}
+                    disabled={cart.reduce((total, item) => total + item.price_sale * item.quantity, 0) === 0}
+                >
                     Proceed to Checkout
                 </Button>
             </Box>

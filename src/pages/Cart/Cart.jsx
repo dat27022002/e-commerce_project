@@ -21,7 +21,7 @@ function Cart() {
         try {
             const response = await CartService.removeFromCart({ variant_id });
             if (response.code !== 200) {
-                notify.error('Deletion failed, please try again later');
+                notify.error(response.message);
                 return;
             }
             setCart((prevCart) => prevCart.filter((item) => item.id !== variant_id));
@@ -44,7 +44,7 @@ function Cart() {
         try {
             const response = await CartService.getFromCart();
             if (response.code !== 200) {
-                notify.error('An error occurred, please try again later');
+                notify.error(response.message);
                 return;
             }
             setCart(response.data);
@@ -56,7 +56,7 @@ function Cart() {
         try {
             const response = await UserService.getRecipientUser();
             if (response.code !== 200) {
-                notify.warn('An error occurred, please try again later');
+                notify.error(response.message);
                 return;
             }
             setRecipients(response.data);
