@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { GoogleLogin } from 'react-google-login';
 import {
     Button,
     Card,
@@ -17,6 +17,7 @@ import {
     OutlinedInput,
     TextField,
     Typography,
+    Link,
 } from '@mui/material';
 import LoadingModal from '~/components/commons/loading-modal/loading-modal';
 import { useAuth } from '~/hooks/useAuth';
@@ -35,6 +36,10 @@ function Login() {
         formState: { errors },
     } = useForm({
         resolver: yupResolver(schema),
+        defaultValues: {
+            email: "",
+            password: ""
+        }
     });
     const auth = useAuth();
     const navigate = useNavigate();
@@ -144,15 +149,26 @@ function Login() {
                                 <Button
                                     variant="contained"
                                     onClick={handleSubmit(onSubmit)}
-                                    sx={{ textTransform: 'none' }}
+                                    sx={{
+                                        textTransform: 'none',
+                                        backgroundColor: 'rgba(185, 28, 28, 0.8)',
+                                        '&:hover': {
+                                            backgroundColor: 'rgb(185, 28, 28)',
+                                        },
+                                    }}
                                 >
                                     Login
                                 </Button>
+                                <GoogleLogin 
+                                clientId = {process.env.REACT_APP_CLIENT_ID_GOOGLE}
+                                onSuccess={auth.handleLoginGG(() => navigate(config.routes.HOME))} 
+                                onError={(e) => console.log(e)}
+                                />
                             </Grid>
-                            <Typography color="blue">Forgot password</Typography>
-                            <Typography color="blue" onClick={() => navigate('/signup')}>
+                            <Link color="#b4282b" href="/forgot_password">Forgot password</Link>
+                            <Link color="#b4282b" href="/signup">
                                 Create account
-                            </Typography>
+                            </Link>
                         </Grid>
                     </Grid>
                 </Card>

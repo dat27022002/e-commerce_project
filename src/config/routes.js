@@ -8,6 +8,7 @@ const routes = {
     PRODUCTSEARCH: '/products/search/:keySearch',
     PROFILE: '/profile',
     SIGNUP: '/signup',
+    FORGOT_PASSWORD: '/forgot_password',
     SHOP: '/shop',
     SHOPCATEGOTY: '/shop/:categoryId',
     TRACKINGORDER: '/trackingOrder',
