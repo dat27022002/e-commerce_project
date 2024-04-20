@@ -9,11 +9,15 @@ import CartService from '~/services/cartServices';
 import notify from '~/utils/notify';
 import CheckoutService from '~/services/checkoutService';
 import UserService from '~/services/userService';
+import { useNavigate } from 'react-router-dom';
+import config from '~/config';
 
 const ProductInfo = ({ product }) => {
     const [quantity, setQuantity] = useState(1);
     const [selectedVariant, setSelectedVariant] = useState();
     const [recipient, setRecipient] = useState();
+    const navigate = useNavigate();
+    const token = window.localStorage.getItem('token');
 
     const handleAddToCart = () => {
         const addToCart = async () => {
@@ -28,6 +32,10 @@ const ProductInfo = ({ product }) => {
                 notify.error('An error occurred, please try again later');
             }
         };
+        if (!token) {
+            navigate(config.routes.LOGIN);
+            return;
+        }
         addToCart();
     };
 
@@ -48,6 +56,10 @@ const ProductInfo = ({ product }) => {
                 notify.error('Checkout failed, please try again later');
             }
         };
+        if (!token) {
+            navigate(config.routes.LOGIN);
+            return;
+        }
         createOrder();
     };
 
@@ -70,7 +82,7 @@ const ProductInfo = ({ product }) => {
                 notify.error('An error occurred, please try again later');
             }
         };
-        fetchRecipients();
+        if (token) fetchRecipients();
     }, []);
 
     return (
