@@ -5,11 +5,14 @@ import { Fragment } from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import AuthProvider from './hooks/useAuth';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 function App() {
     return (
         <Router>
             <div className="App">
                 <AuthProvider>
+                <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID_GOOGLE}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <Routes>
                             {publicRoutes.map((route, index) => {
@@ -64,6 +67,7 @@ function App() {
                             })}
                         </Routes>
                     </LocalizationProvider>
+                    </GoogleOAuthProvider>
                 </AuthProvider>
             </div>
         </Router>
