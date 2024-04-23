@@ -2,11 +2,11 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Fragment, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import {
     Button,
-    Card,
+    Dialog,
     FormControl,
     FormHelperText,
     FormLabel,
@@ -15,21 +15,18 @@ import {
     InputAdornment,
     OutlinedInput,
     TextField,
-    Typography,
     Link,
+    DialogTitle,
+    DialogContent,
 } from '@mui/material';
-import LoadingModal from '~/components/commons/loading-modal/loading-modal';
-import { useAuth } from '~/hooks/useAuth';
-import config from '~/config';
 import LoginWithGG from '~/components/login/LoginWithGG';
+import { useAuth } from '~/hooks/useAuth';
 
 const schema = yup.object().shape({
     email: yup.string().email().required(),
     password: yup.string().required(),
 });
-function Login() {
-    const [loading, setLoading] = useState(false);
-
+function LoginPopup({open, onClose, onSubmit}) {
     const {
         handleSubmit,
         control,
@@ -41,9 +38,8 @@ function Login() {
             password: ""
         }
     });
-    const auth = useAuth();
+    const auth = useAuth()
     const location = useLocation()
-    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -51,53 +47,17 @@ function Login() {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-    const onSubmit = async (data) => {
-        setLoading(true);
-        await auth.login(data, () => {
-            if(auth.savedRoute.current){
-                navigate(auth.savedRoute.current)
-                auth.savedRoute.current = ''
-            } else {
-                navigate(config.routes.HOME)
-            }
-            setLoading(false);
-        });
-    };
     return (
-        <Fragment>
-            <Grid
-                container
-                sx={{ justifyContent: 'center', alignItem: 'center', minHeight: '100vh', paddingY: '30px' }}
-            >
-                <Card
-                    sx={{
-                        maxWidth: '926px',
-                    }}
+                <Dialog
+                    open={open}
+                    onClose={onClose}
+                    maxWidth='sm'
+                    fullWidth
                 >
-                    <Grid container sx={{ height: '100%' }}>
-                        <Grid item xs={12} sm={6}>
-                            <img
-                                src="images/Login.jpg"
-                                alt=""
-                                style={{
-                                    height: '100%',
-                                }}
-                            />
-                        </Grid>
-                        <Grid
-                            item
-                            container
-                            flexDirection="column"
-                            xs={12}
-                            sm={6}
-                            justifyContent={'space-around'}
-                            sx={{
-                                padding: 6,
-                            }}
-                        >
-                            <Typography variant="h5" fontWeight={700}>
-                                Login
-                            </Typography>
+                        <DialogTitle>
+                        Login
+                        </DialogTitle>
+                            <DialogContent>
                             <Grid container flexDirection={'column'} gap="16px">
                                 <FormControl>
                                     <FormLabel sx={{ fontSize: '14px', fontWeight: 700 }}>Email</FormLabel>
@@ -165,16 +125,9 @@ function Login() {
                                 >
                                     Login
                                 </Button>
-                                <LoginWithGG callback={() => {
-                                    if(auth.savedRoute.current){
-                                        navigate(auth.savedRoute.current)
-                                        auth.savedRoute.current = ''
-                                    } else {
-                                        navigate(config.routes.HOME)
-                                    }
-                                }
-                            }/>
+                                <LoginWithGG callback={onClose}/>
                             </Grid>
+                            <Grid item container justifyContent={'space-around'} marginTop={2}>
                             <Link color="#b4282b" href="/forgot_password" onClick={() => {
                                 auth.savedRoute.current = location.pathname
                             }}>Forgot password</Link>
@@ -183,13 +136,10 @@ function Login() {
                             }}>
                                 Create account
                             </Link>
-                        </Grid>
-                    </Grid>
-                </Card>
-            </Grid>
-            {loading && <LoadingModal />}
-        </Fragment>
+                            </Grid>
+                            </DialogContent>
+                </Dialog>
     );
 }
 
-export default Login;
+export default LoginPopup;

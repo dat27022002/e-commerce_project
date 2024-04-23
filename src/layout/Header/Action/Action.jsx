@@ -14,14 +14,16 @@ import NoimageAvatar from '~/assets/img/noImageAvatar.png';
 import config from '~/config';
 import { userMenu, noUserMenu } from '../Constant';
 import { useAuth } from '~/hooks/useAuth';
+import { useLocation } from 'react-router-dom'
+import LoginPopup from '~/components/login/LoginPopup';
 
 const cx = classNames.bind(styles);
 
 function Action() {
     const [loading, setLoading] = useState(false);
-
+    const location = useLocation()
     const navigate = useNavigate();
-
+    const [openLogin, setOpenLogin] = useState(false)
     const token = localStorage.getItem('token');
     const auth = useAuth();
     const currentUser = auth.user;
@@ -43,7 +45,18 @@ function Action() {
             default:
         }
     };
-
+    const handleLogin = () => {
+        auth.savedRoute.current = location.pathname
+        if(location.pathname === '/'){
+            navigate(config.routes.LOGIN)
+        } else {
+            setOpenLogin(true)
+        }
+    }
+    const handleSignup = () => {
+        auth.savedRoute.current = location.pathname
+        navigate(config.routes.SIGNUP)
+    }
     return (
         <Fragment>
             <div className={cx('flex items-center justify-end ml-6')}>
@@ -51,10 +64,10 @@ function Action() {
                     <></>
                 ) : (
                     <Fragment>
-                        <Button className={cx('mr-2 h-9 px-2')} primary to={config.routes.LOGIN}>
+                        <Button className={cx('mr-2 h-9 px-2')} primary onClick={handleLogin}>
                             Login
                         </Button>
-                        <Button className={cx('h-9  px-2', 'max-sm:hidden')} primary to={config.routes.SIGNUP}>
+                        <Button className={cx('h-9  px-2', 'max-sm:hidden')} primary onClick={handleSignup}>
                             Sign up
                         </Button>
                     </Fragment>
@@ -73,6 +86,13 @@ function Action() {
                     )}
                 </Menu>
             </div>
+            {openLogin && <LoginPopup open={openLogin} onClose={() => setOpenLogin(false)} onSubmit={async (data) => {
+                    setLoading(true);
+                    await auth.login(data, () => {
+                        setLoading(false);
+                        setOpenLogin(false)
+                });
+            }} />}
             {loading && <LoadingModal />}
         </Fragment>
     );

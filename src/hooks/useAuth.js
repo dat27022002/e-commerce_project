@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { createContext } from 'react';
 import api from 'src/config/api';
 import { ToastContainer, toast } from 'react-toastify';
@@ -12,7 +12,7 @@ const authContext = createContext(null);
 export default function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false)
-
+    const savedRoute = useRef('')
     useEffect(() => {
         const user = window.localStorage.getItem('user');
         if (user) {
@@ -61,17 +61,16 @@ export default function AuthProvider({ children }) {
         setUser(null);
         if (callback) callback();
     };
-    const handleLoginGG = (callback = null) => (res) => {
+    const handleLoginGG = (token) => {
         setLoading(true)
         axios.post(api.LOGIN_BY_GG, {
-            googleToken: res.accessToken
+            googleToken: token
         })
         .then((response) => {
             window.localStorage.setItem('token', response.data.data.token);
-            const userData = {...response.data.data.user, ...res.profileObj}
+            const userData = {...response.data.data.user}
             window.localStorage.setItem('user', JSON.stringify(userData))
             setUser(userData)
-            if(callback) callback()
             setLoading(false)
         }).catch(err => {
             toast.error(err.message)
@@ -129,6 +128,7 @@ export default function AuthProvider({ children }) {
         <authContext.Provider
             value={{
                 user,
+                savedRoute,
                 setUser,
                 login: handleLogin,
                 logout: handleLogout,
