@@ -34,6 +34,7 @@ function Checkout() {
         setStatusTitle('Order Status Unknown');
         setStatusMessage('We are unable to determine the status of your order.');
         setStatusIcon(<InfoIcon color="disabled" />);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

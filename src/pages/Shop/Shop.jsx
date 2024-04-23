@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import LoadingModal from '~/components/commons/loading-modal/loading-modal';
@@ -6,8 +5,6 @@ import Slider from '~/components/home/hero-banner';
 import ProductCard from '~/components/home/product/product-card';
 import ProductService from '~/services/productService';
 import productStore from '~/stores/product-store';
-
-const cx = classNames;
 
 function Shop() {
     const { categoryId } = useParams();
@@ -23,6 +20,7 @@ function Shop() {
         };
         fetchProducts();
         setIsLoading(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [categoryId]);
 
     return (
@@ -34,7 +32,7 @@ function Shop() {
                         placeholder="Search here"
                         defaultValue={searchParams?.get('search')}
                         onChange={(event) => {
-                            const { name, value } = event?.target;
+                            const { value } = event?.target;
                             if (value) {
                                 setSearchParams({ search: value });
                             } else {

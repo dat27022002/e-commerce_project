@@ -1,7 +1,7 @@
 import { formatNumberWithCommas } from '~/utils/functions';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import classNames from 'classnames';
 const ProductCard = ({ product }) => {
     const navigate = useNavigate();

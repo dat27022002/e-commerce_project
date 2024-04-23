@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import LoadingModal from '~/components/commons/loading-modal/loading-modal';
@@ -7,8 +6,6 @@ import ProductInfo from '~/components/product/product-info';
 import Review from '~/components/product/review';
 import ProductService from '~/services/productService';
 import productStore from '~/stores/product-store';
-
-const cx = classNames;
 
 function Product() {
     const { productId } = useParams();
@@ -36,6 +33,7 @@ function Product() {
         } else {
             navigate('/', { replace: true });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [productId]);
     console.log(product);
     useEffect(() => {
@@ -43,7 +41,8 @@ function Product() {
             const _products = await ProductService.getAllProducts();
             setProducts(_products);
         };
-        if (products?.length == 0) fetchProducts();
+        if (products?.length === 0) fetchProducts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <div className="flex justify-center w-full">
@@ -56,7 +55,7 @@ function Product() {
                             <h1 className="text-2xl font-semibold">You may aslo like</h1>
                             <div className="w-full grid grid-cols-4 gap-6 ">
                                 {products
-                                    ?.filter((e) => e?.id != product?.id)
+                                    ?.filter((e) => e?.id !== product?.id)
                                     .slice(0, 8)
                                     .map((product, idx) => (
                                         <ProductCard product={product} key={'product-' + idx} />

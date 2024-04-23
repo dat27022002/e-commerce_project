@@ -83,6 +83,7 @@ const ProductInfo = ({ product }) => {
             }
         };
         if (token) fetchRecipients();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -125,7 +126,7 @@ const ProductInfo = ({ product }) => {
                             <li
                                 className={classNames(
                                     'text-sm px-8 py-2 rounded-lg border border-solid border-slate-200 hover:cursor-pointer hover:bg-red-100/70 transition-all duration-200',
-                                    selectedVariant?.id == variant?.id && 'bg-red-200',
+                                    selectedVariant?.id === variant?.id && 'bg-red-200',
                                 )}
                                 onClick={() => setSelectedVariant(variant)}
                                 key={'variant-' + idx}
