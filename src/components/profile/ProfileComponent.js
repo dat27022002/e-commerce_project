@@ -58,7 +58,7 @@ const ProfileComponent = ({ setName, setLoading }) => {
         defaultValues,
     });
     const inputRef = useRef(null);
-    const auth = useAuth()
+    const auth = useAuth();
     const uploadImage = async (value) => {
         const file = value.target.files[0];
         if (file) {
@@ -89,7 +89,7 @@ const ProfileComponent = ({ setName, setLoading }) => {
             const res = await httpRequest.patch('user/infor', data);
             if (res?.status === 200) {
                 toast.success('Save success!');
-                auth.setUser({...auth.user, ...data})
+                auth.setUser({ ...auth.user, ...data });
                 setLoading(false);
             } else {
                 toast.error('Save faild!');
@@ -104,7 +104,7 @@ const ProfileComponent = ({ setName, setLoading }) => {
             setLoading(true);
             try {
                 const res = await httpRequest.get('user/infor');
-                const userData = {...res.data.data}
+                const userData = { ...res.data.data };
                 if (res?.status === 200) {
                     for (let [key, value] of Object.entries(userData)) {
                         setValue(key, value);
@@ -116,6 +116,7 @@ const ProfileComponent = ({ setName, setLoading }) => {
             }
             setLoading(false);
         })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     watch();
     return (
@@ -175,7 +176,13 @@ const ProfileComponent = ({ setName, setLoading }) => {
                                         control={control}
                                         name="email"
                                         render={({ field: { value, onChange } }) => (
-                                            <TextField value={value} onChange={onChange} size="small" fullWidth disabled/>
+                                            <TextField
+                                                value={value}
+                                                onChange={onChange}
+                                                size="small"
+                                                fullWidth
+                                                disabled
+                                            />
                                         )}
                                     />
                                     {errors.email && (
@@ -194,7 +201,13 @@ const ProfileComponent = ({ setName, setLoading }) => {
                                         control={control}
                                         name="phone_number"
                                         render={({ field: { value, onChange } }) => (
-                                            <TextField value={value} onChange={onChange} size="small" fullWidth disabled/>
+                                            <TextField
+                                                value={value}
+                                                onChange={onChange}
+                                                size="small"
+                                                fullWidth
+                                                disabled
+                                            />
                                         )}
                                     />
                                     {errors.phone_number && (

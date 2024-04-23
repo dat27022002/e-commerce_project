@@ -35,7 +35,9 @@ const EditAddressComponent = ({ open, setOpen, onSave, init }) => {
         for (let [key, value] of Object.entries(init)) {
             setValue(key, value);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     return (
         <Dialog open={open} onClose={() => setOpen(false)}>
             <DialogTitle>Edit an address</DialogTitle>

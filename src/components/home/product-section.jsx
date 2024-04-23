@@ -10,7 +10,8 @@ const ProductSection = () => {
             const _products = await ProductService.getAllProducts();
             setProducts(_products);
         };
-        if (products?.length == 0) fetchProducts();
+        if (products?.length === 0) fetchProducts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

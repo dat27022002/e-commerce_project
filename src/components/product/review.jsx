@@ -12,7 +12,7 @@ const Review = ({ reviews }) => {
                     <h1 className="my-0 py-0">
                         {(
                             reviews?.reduce((total, e) => total + e?.star, 0) /
-                            (reviews?.length == 0 ? 1 : reviews?.length)
+                            (reviews?.length === 0 ? 1 : reviews?.length)
                         ).toFixed(1)}
                     </h1>
                 </div>
