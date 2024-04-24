@@ -25,6 +25,8 @@ import httpRequest from 'src/utils/httpRequest';
 import { toast } from 'react-toastify';
 import { useAuth } from '~/hooks/useAuth';
 
+const maxSizeImage = 1024 * 1024
+
 const defaultValues = {
     name: '',
     email: '',
@@ -62,6 +64,10 @@ const ProfileComponent = ({ setName, setLoading }) => {
     const uploadImage = async (value) => {
         const file = value.target.files[0];
         if (file) {
+            if(file.size >= maxSizeImage){
+                setError('image', { type: 'custom', message: 'Image is too large.' })
+                return
+            }
             const form = new FormData();
             form.append('image', file);
             try {
@@ -76,7 +82,7 @@ const ProfileComponent = ({ setName, setLoading }) => {
                     setLoading(false);
                 }
             } catch (err) {
-                toast.error(err);
+                toast.error(err.message);
                 setLoading(false);
             }
         } else {
@@ -96,7 +102,7 @@ const ProfileComponent = ({ setName, setLoading }) => {
                 setLoading(false);
             }
         } catch (err) {
-            toast.error(err);
+            toast.error(err.message);
         }
     };
     useEffect(() => {
@@ -112,7 +118,7 @@ const ProfileComponent = ({ setName, setLoading }) => {
                     setName(userData.name);
                 }
             } catch (err) {
-                toast.error(err);
+                toast.error(err.message);
             }
             setLoading(false);
         })();
@@ -349,7 +355,8 @@ const ProfileComponent = ({ setName, setLoading }) => {
                         >
                             Upload Photo
                         </Button>
-                        {errors.image && <FormHelperText sx={{ color: 'red' }}>{errors.image.message}</FormHelperText>}
+                        {errors.image && <FormHelperText sx={{color: '#ff0005'}}>{errors.image.message}</FormHelperText>}
+                        <Typography variant='caption'>Dung lượng file tối đa là 1MB</Typography>
                     </Grid>
                 </Grid>
             </CardContent>
