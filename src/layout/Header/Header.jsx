@@ -7,6 +7,8 @@ import { faBars, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-
 import styles from './Header.module.scss';
 import Search from './Search';
 import Action from './Action';
+import Logo from '~/assets/img/logo.png';
+import Image from '~/components/Image';
 import config from '~/config';
 import ProductService from '~/services/productService';
 
@@ -69,7 +71,7 @@ function Header() {
                     to={config.routes.HOME}
                     className={cx('flex items-center justify-center h-full text-2xl font-mono tracking-[0.3rem] mr-5')}
                 >
-                    <div>SUPERHERO</div>
+                    <Image className={cx('h-10')} src={Logo} />
                 </Link>
 
                 <ul
