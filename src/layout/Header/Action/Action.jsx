@@ -1,8 +1,8 @@
 import classNames from 'classnames/bind';
 import { Fragment, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisVertical, faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './Action.module.scss';
 import Button from '~/components/Button';
@@ -14,16 +14,16 @@ import NoimageAvatar from '~/assets/img/noImageAvatar.png';
 import config from '~/config';
 import { userMenu, noUserMenu } from '../Constant';
 import { useAuth } from '~/hooks/useAuth';
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom';
 import LoginPopup from '~/components/login/LoginPopup';
 
 const cx = classNames.bind(styles);
 
 function Action() {
     const [loading, setLoading] = useState(false);
-    const location = useLocation()
+    const location = useLocation();
     const navigate = useNavigate();
-    const [openLogin, setOpenLogin] = useState(false)
+    const [openLogin, setOpenLogin] = useState(false);
     const token = localStorage.getItem('token');
     const auth = useAuth();
     const currentUser = auth.user;
@@ -46,22 +46,24 @@ function Action() {
         }
     };
     const handleLogin = () => {
-        auth.savedRoute.current = location.pathname
-        if(location.pathname === '/'){
-            navigate(config.routes.LOGIN)
+        auth.savedRoute.current = location.pathname;
+        if (location.pathname === '/') {
+            navigate(config.routes.LOGIN);
         } else {
-            setOpenLogin(true)
+            setOpenLogin(true);
         }
-    }
+    };
     const handleSignup = () => {
-        auth.savedRoute.current = location.pathname
-        navigate(config.routes.SIGNUP)
-    }
+        auth.savedRoute.current = location.pathname;
+        navigate(config.routes.SIGNUP);
+    };
     return (
         <Fragment>
             <div className={cx('flex items-center justify-end ml-6')}>
                 {token ? (
-                    <></>
+                    <Link to={config.routes.CART} className={cx('mr-2 h-9 px-2 flex justify-center items-center')}>
+                        <FontAwesomeIcon icon={faCartShopping} />
+                    </Link>
                 ) : (
                     <Fragment>
                         <Button className={cx('mr-2 h-9 px-2')} primary onClick={handleLogin}>
@@ -86,13 +88,19 @@ function Action() {
                     )}
                 </Menu>
             </div>
-            {openLogin && <LoginPopup open={openLogin} onClose={() => setOpenLogin(false)} onSubmit={async (data) => {
-                    setLoading(true);
-                    await auth.login(data, () => {
-                        setLoading(false);
-                        setOpenLogin(false)
-                });
-            }} />}
+            {openLogin && (
+                <LoginPopup
+                    open={openLogin}
+                    onClose={() => setOpenLogin(false)}
+                    onSubmit={async (data) => {
+                        setLoading(true);
+                        await auth.login(data, () => {
+                            setLoading(false);
+                            setOpenLogin(false);
+                        });
+                    }}
+                />
+            )}
             {loading && <LoadingModal />}
         </Fragment>
     );
