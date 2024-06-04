@@ -1,9 +1,10 @@
-import httpRequest, { get } from '~/utils/httpRequest';
+import { data } from 'autoprefixer';
+import httpRequest, { get, post } from '~/utils/httpRequest';
 
 const productRoutes = {
     getAllProducts: '/fake-review/products',
     getAllCategories: '/category',
-    product: '/product',
+    product: '/product/filter',
 };
 
 export default class ProductService {
@@ -16,7 +17,7 @@ export default class ProductService {
     };
     static getProductByCategory = async (category) => {
         try {
-            const res = await httpRequest.get(productRoutes.product + `?category_id=${category}`);
+            const res = await httpRequest.post(productRoutes.product, { data: { category_id: category } });
             return res.data;
         } catch (error) {}
         return [];
@@ -30,14 +31,14 @@ export default class ProductService {
     };
     static getAllCategories = async () => {
         try {
-            const res = await get(productRoutes.getAllCategories + '/root');
+            const res = await get(productRoutes.getAllCategories);
             return res;
         } catch (error) {}
         return [];
     };
     static searchProduct = async (valueSearch) => {
         try {
-            const res = await get(productRoutes.product, { param: { search: valueSearch } });
+            const res = await post(productRoutes.product, { data: { search: valueSearch } });
             return res;
         } catch (error) {}
         return [];
